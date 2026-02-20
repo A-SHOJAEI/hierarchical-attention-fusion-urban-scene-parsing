@@ -1,0 +1,6 @@
+{
+  "best_val_miou": 0.1259765326976776,
+  "final_val_miou": 0.019996756687760353,
+  "final_val_pixel_acc": 0.2999513530731201,
+  "final_val_boundary_f1": 0.028016650666796285
+}

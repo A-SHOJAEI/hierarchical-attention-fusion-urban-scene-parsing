@@ -1,0 +1,70 @@
+# Hierarchical Attention Fusion Urban Scene Parsing - Default Configuration
+
+# Model Architecture
+model:
+  backbone: "resnet50"
+  num_classes: 19  # Cityscapes classes
+  pretrained: true
+  encoder_depths: [3, 4, 6, 3]
+  attention_hidden_dim: 256
+  fusion_stages: [1, 2, 3, 4]  # Which encoder stages to fuse
+  use_hierarchical_attention: true
+  use_boundary_refinement: true
+
+# Data
+data:
+  dataset: "cityscapes"
+  image_size: [512, 1024]
+  crop_size: [512, 512]
+  batch_size: 2
+  num_workers: 4
+  augmentation:
+    horizontal_flip: 0.5
+    scale_range: [0.5, 2.0]
+    rotation_limit: 10
+    brightness_limit: 0.2
+    contrast_limit: 0.2
+
+# Training
+training:
+  epochs: 100
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  optimizer: "adamw"
+  scheduler: "cosine"
+  warmup_epochs: 5
+  min_lr: 0.000001
+  gradient_clip_norm: 1.0
+  mixed_precision: true
+  accumulation_steps: 4
+
+# Early Stopping
+early_stopping:
+  enabled: true
+  patience: 15
+  min_delta: 0.0001
+  monitor: "val_miou"
+  mode: "max"
+
+# Loss
+loss:
+  ce_weight: 1.0
+  boundary_weight: 0.4
+  boundary_schedule: "progressive"  # progressive, constant
+  focal_alpha: 0.25
+  focal_gamma: 2.0
+
+# Evaluation
+evaluation:
+  metrics: ["miou", "pixel_accuracy", "boundary_f1"]
+  save_predictions: false
+  visualize_samples: 10
+
+# Experiment
+experiment:
+  name: "hierarchical_attention_fusion"
+  seed: 42
+  save_dir: "checkpoints"
+  log_interval: 10
+  val_interval: 1
+  save_best_only: true
